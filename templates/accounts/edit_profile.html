@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Редактировать профиль - BookClub Hub{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Редактировать профиль</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_avatar" class="form-label">Аватар</label>
+                        {{ form.avatar }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_bio" class="form-label">О себе</label>
+                        {{ form.bio }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Любимые жанры</label>
+                        <div class="row">
+                            {% for genre in form.favorite_genres %}
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        {{ genre }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <a href="{% url 'accounts:profile' username=user.username %}" class="btn btn-secondary">Отмена</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

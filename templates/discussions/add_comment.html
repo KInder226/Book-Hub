@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Добавить комментарий - {{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Добавить комментарий</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <strong>Пост:</strong> {{ post.title }}
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_content" class="form-label">Комментарий</label>
+                        {{ form.content }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Отправить</button>
+                    <a href="{% url 'discussions:post_detail' pk=post.pk %}" class="btn btn-secondary">Отмена</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

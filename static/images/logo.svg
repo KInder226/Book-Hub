@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" fill="#ffffff" rx="80"/>
+  
+  <!-- Open Book -->
+  <rect x="160" y="140" width="192" height="260" fill="#d4a574" rx="8"/>
+  <rect x="160" y="140" width="96" height="260" fill="#ffd89b"/>
+  <rect x="256" y="140" width="96" height="260" fill="#a8e6cf"/>
+  
+  <!-- Book Spine with Glow -->
+  <rect x="256" y="140" width="4" height="260" fill="#ffffff" opacity="0.9"/>
+  <ellipse cx="258" cy="270" rx="12" ry="130" fill="#ffffff" opacity="0.5"/>
+  
+  <!-- Bookmark Ribbon -->
+  <path d="M 256 140 L 272 175 L 256 210 L 240 175 Z" fill="#ffd700"/>
+  
+  <!-- Top Chat Bubble (Blue) -->
+  <circle cx="256" cy="90" r="28" fill="#4285f4"/>
+  <circle cx="256" cy="90" r="18" fill="#ffffff"/>
+  <circle cx="250" cy="85" r="2.5" fill="#333"/>
+  <circle cx="258" cy="85" r="2.5" fill="#333"/>
+  <circle cx="261" cy="90" r="2.5" fill="#333"/>
+  
+  <!-- Left Chat Bubble (Gray) -->
+  <circle cx="120" cy="270" r="24" fill="#666"/>
+  <circle cx="120" cy="270" r="14" fill="#ffffff"/>
+  <circle cx="116" cy="266" r="2" fill="#333"/>
+  <circle cx="122" cy="266" r="2" fill="#333"/>
+  <circle cx="119" cy="270" r="2" fill="#333"/>
+  
+  <!-- Right Progress Circle -->
+  <circle cx="392" cy="270" r="35" fill="#ffffff" stroke="#333" stroke-width="3"/>
+  <circle cx="392" cy="270" r="30" fill="none" stroke="#ff9500" stroke-width="4" 
+          stroke-dasharray="94 94" stroke-dashoffset="47" transform="rotate(-90 392 270)"/>
+  <text x="392" y="280" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#333" text-anchor="middle">50%</text>
+  
+  <!-- Connecting Lines -->
+  <line x1="256" y1="118" x2="258" y2="140" stroke="#ccc" stroke-width="3" opacity="0.6"/>
+  <line x1="144" y1="270" x2="160" y2="270" stroke="#ccc" stroke-width="3" opacity="0.6"/>
+  <line x1="357" y1="270" x2="376" y2="270" stroke="#ccc" stroke-width="3" opacity="0.6"/>
+</svg>

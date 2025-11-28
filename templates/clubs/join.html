@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Присоединиться к клубу - {{ club.name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Присоединиться к клубу</h4>
+            </div>
+            <div class="card-body">
+                <h5>{{ club.name }}</h5>
+                <p>{{ club.description|truncatewords:30 }}</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary w-100">Присоединиться</button>
+                </form>
+                <a href="{% url 'clubs:detail' pk=club.pk %}" class="btn btn-secondary w-100 mt-2">Отмена</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

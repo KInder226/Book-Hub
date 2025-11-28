@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: bookclubhub
+    runtime: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn bookclubhub.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
+      - key: ALLOWED_HOSTS
+        value: bookclubhub.onrender.com,*.onrender.com
+      - key: USE_POSTGRES
+        value: True
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bookclubhub-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: bookclubhub-redis
+          property: connectionString
+      - key: DJANGO_SETTINGS_MODULE
+        value: bookclubhub.settings
+    healthCheckPath: /
+
+databases:
+  - name: bookclubhub-db
+    databaseName: bookclubhub
+    user: bookclubhub_user
+    plan: free
+
+  - type: redis
+    name: bookclubhub-redis
+    plan: free
+    maxmemoryPolicy: allkeys-lru
+

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Покинуть клуб - {{ club.name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">Покинуть клуб</h4>
+            </div>
+            <div class="card-body">
+                <p>Вы уверены, что хотите покинуть клуб <strong>{{ club.name }}</strong>?</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger w-100">Да, покинуть</button>
+                </form>
+                <a href="{% url 'clubs:detail' pk=club.pk %}" class="btn btn-secondary w-100 mt-2">Отмена</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Установить книгу - {{ club.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="bi bi-book"></i> Установить текущую книгу</h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Клуб: {{ club.name }}</p>
+                {% if club.current_book %}
+                    <div class="alert alert-info">
+                        Текущая книга: <strong>{{ club.current_book.title }}</strong> ({{ club.current_book.author }})
+                    </div>
+                {% endif %}
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="book_id" class="form-label">Выберите книгу</label>
+                        <select name="book_id" id="book_id" class="form-select">
+                            <option value="">-- Удалить текущую книгу --</option>
+                            {% for book in books %}
+                                <option value="{{ book.pk }}" {% if club.current_book and club.current_book.pk == book.pk %}selected{% endif %}>
+                                    {{ book.title }} - {{ book.author }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="reading_start_date" class="form-label">Дата начала чтения</label>
+                            <input type="date" name="reading_start_date" id="reading_start_date" class="form-control" 
+                                   value="{% if club.reading_start_date %}{{ club.reading_start_date|date:'Y-m-d' }}{% endif %}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="reading_end_date" class="form-label">Дата окончания чтения</label>
+                            <input type="date" name="reading_end_date" id="reading_end_date" class="form-control"
+                                   value="{% if club.reading_end_date %}{{ club.reading_end_date|date:'Y-m-d' }}{% endif %}">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <a href="{% url 'clubs:detail' pk=club.pk %}" class="btn btn-secondary">Отмена</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

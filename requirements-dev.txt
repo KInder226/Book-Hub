@@ -1,0 +1,21 @@
+# Требования для разработки без PostgreSQL
+# Используйте этот файл, если у вас проблемы с установкой psycopg2-binary
+
+Django
+djangorestframework==3.14.0
+# psycopg2-binary - закомментировано, используется SQLite
+celery
+redis
+django-channels
+channels-redis
+django-mptt
+django-notifications-hq
+pillow
+python-decouple
+django-debug-toolbar
+django-extensions
+pytest
+pytest-django
+factory-boy
+whitenoise
+

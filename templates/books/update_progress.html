@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Обновить прогресс - {{ book.title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Обновить прогресс чтения</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <h5>{{ book.title }}</h5>
+                    <p class="text-muted">{{ book.author }}</p>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="id_current_chapter" class="form-label">Текущая глава</label>
+                            {{ form.current_chapter }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_pages_read" class="form-label">Прочитано страниц</label>
+                            {{ form.pages_read }}
+                            {% if book.pages %}
+                                <small class="form-text text-muted">Всего страниц: {{ book.pages }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            {{ form.is_completed }}
+                            <label class="form-check-label" for="id_is_completed">
+                                Книга прочитана
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_notes" class="form-label">Заметки</label>
+                        {{ form.notes }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <a href="{% url 'books:detail' pk=book.pk %}" class="btn btn-secondary">Отмена</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

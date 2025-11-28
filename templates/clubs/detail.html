@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ club.name }} - BookClub Hub{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            {% if club.cover %}
+                <img src="{{ club.cover.url }}" class="card-img-top" alt="{{ club.name }}" style="max-height: 300px; object-fit: cover;">
+            {% endif %}
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h1 class="card-title">
+                            {{ club.name }}
+                            {% if club.is_private %}
+                                <i class="bi bi-lock-fill text-warning"></i>
+                            {% endif %}
+                        </h1>
+                        <p class="text-muted">
+                            Создан {{ club.created_by.username }} | {{ club.created_at|date:"d.m.Y" }}
+                        </p>
+                    </div>
+                    {% if user.is_authenticated %}
+                        {% if is_member %}
+                            {% if user_role == 'admin' or user_role == 'moderator' %}
+                                <span class="badge bg-success">{{ user_role|title }}</span>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <p class="card-text">{{ club.description|linebreaks }}</p>
+            </div>
+        </div>
+
+        <!-- Current Book -->
+        {% if club.current_book %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-book"></i> Текущая книга</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            {% if club.current_book.cover %}
+                                <img src="{{ club.current_book.cover.url }}" class="img-fluid" alt="{{ club.current_book.title }}">
+                            {% endif %}
+                        </div>
+                        <div class="col-md-9">
+                            <h5>{{ club.current_book.title }}</h5>
+                            <p class="text-muted">{{ club.current_book.author }}</p>
+                            {% if user_progress %}
+                                <div class="progress mb-2">
+                                    <div class="progress-bar" role="progressbar" style="width: {{ user_progress.progress_percentage }}%">
+                                        {{ user_progress.progress_percentage }}%
+                                    </div>
+                                </div>
+                                <p>Прочитано: {{ user_progress.pages_read }} из {{ club.current_book.pages }} страниц</p>
+                            {% endif %}
+                            <a href="{% url 'books:detail' pk=club.current_book.pk %}" class="btn btn-sm btn-primary">Подробнее о книге</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Discussions -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-chat-dots"></i> Обсуждения</h5>
+                {% if is_member %}
+                    <a href="{% url 'discussions:create_post' club_id=club.pk %}" class="btn btn-sm btn-primary">
+                        <i class="bi bi-plus-circle"></i> Создать пост
+                    </a>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <a href="{% url 'discussions:club_posts' club_id=club.pk %}" class="btn btn-outline-primary w-100">
+                    Перейти к обсуждениям
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Actions -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Действия</h5>
+            </div>
+            <div class="card-body">
+                {% if user.is_authenticated %}
+                    {% if is_member %}
+                        <a href="{% url 'discussions:club_posts' club_id=club.pk %}" class="btn btn-primary w-100 mb-2">
+                            <i class="bi bi-chat-dots"></i> Обсуждения
+                        </a>
+                        {% if user_role == 'admin' or user_role == 'moderator' %}
+                            <a href="{% url 'clubs:invite' club_id=club.pk %}" class="btn btn-outline-primary w-100 mb-2">
+                                <i class="bi bi-person-plus"></i> Пригласить
+                            </a>
+                            <a href="{% url 'clubs:set_book' club_id=club.pk %}" class="btn btn-outline-primary w-100 mb-2">
+                                <i class="bi bi-book"></i> Установить книгу
+                            </a>
+                        {% endif %}
+                        <a href="{% url 'clubs:leave' club_id=club.pk %}" class="btn btn-outline-danger w-100">
+                            <i class="bi bi-box-arrow-right"></i> Покинуть клуб
+                        </a>
+                    {% else %}
+                        {% if club.is_private %}
+                            <p class="text-muted">Этот клуб приватный. Вам нужно приглашение для присоединения.</p>
+                            <input type="text" class="form-control mb-2" value="{{ club.get_invitation_link }}" readonly>
+                            <button class="btn btn-primary w-100" onclick="navigator.clipboard.writeText(this.previousElementSibling.value); alert('Ссылка скопирована!');">
+                                <i class="bi bi-clipboard"></i> Копировать ссылку
+                            </button>
+                        {% else %}
+                            <form method="post" action="{% url 'clubs:join' invitation_code=club.invitation_code %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="bi bi-plus-circle"></i> Присоединиться
+                                </button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    <p class="text-muted">Войдите, чтобы присоединиться к клубу.</p>
+                    <a href="{% url 'accounts:login' %}" class="btn btn-primary w-100">Войти</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Members -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Участники ({{ memberships.count }})</h5>
+            </div>
+            <div class="card-body">
+                {% for membership in memberships|slice:":10" %}
+                    <div class="d-flex align-items-center mb-2">
+                        {% if membership.user.profile.avatar %}
+                            <img src="{{ membership.user.profile.avatar.url }}" class="avatar me-2" alt="{{ membership.user.username }}">
+                        {% else %}
+                            <i class="bi bi-person-circle me-2" style="font-size: 2rem;"></i>
+                        {% endif %}
+                        <div>
+                            <a href="{% url 'accounts:profile' username=membership.user.username %}" class="text-decoration-none">
+                                {{ membership.user.username }}
+                            </a>
+                            <br>
+                            <small class="text-muted">{{ membership.get_role_display }}</small>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

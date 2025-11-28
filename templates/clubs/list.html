@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Книжные клубы - BookClub Hub{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-people"></i> Книжные клубы</h1>
+    {% if user.is_authenticated %}
+        <a href="{% url 'clubs:create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Создать клуб
+        </a>
+    {% endif %}
+</div>
+
+<!-- Search and Filters -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-6">
+                <input type="text" name="search" class="form-control" placeholder="Поиск по названию..." value="{{ search_query }}">
+            </div>
+            <div class="col-md-3">
+                <select name="is_private" class="form-select">
+                    <option value="">Все клубы</option>
+                    <option value="public" {% if selected_privacy == 'public' %}selected{% endif %}>Публичные</option>
+                    <option value="private" {% if selected_privacy == 'private' %}selected{% endif %}>Приватные</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary w-100">Поиск</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Clubs List -->
+{% if clubs %}
+    <div class="row">
+        {% for club in clubs %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    {% if club.cover %}
+                        <img src="{{ club.cover.url }}" class="card-img-top" alt="{{ club.name }}" style="height: 200px; object-fit: cover;">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{% url 'clubs:detail' pk=club.pk %}" class="text-decoration-none">{{ club.name }}</a>
+                            {% if club.is_private %}
+                                <i class="bi bi-lock-fill text-warning"></i>
+                            {% endif %}
+                        </h5>
+                        <p class="card-text">{{ club.description|truncatewords:20 }}</p>
+                        {% if club.current_book %}
+                            <p class="text-muted">
+                                <i class="bi bi-book"></i> Читаем: {{ club.current_book.title }}
+                            </p>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <small class="text-muted">
+                            <i class="bi bi-person"></i> {{ club.members.count }} участников
+                        </small>
+                        <a href="{% url 'clubs:detail' pk=club.pk %}" class="btn btn-sm btn-primary float-end">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>
+                    </li>
+                {% endif %}
+                <li class="page-item active">
+                    <span class="page-link">{{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+                </li>
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Следующая</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+{% else %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> Клубы не найдены. Будьте первым, кто создаст клуб!
+    </div>
+{% endif %}
+{% endblock %}
+

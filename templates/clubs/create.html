@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Создать клуб - BookClub Hub{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="bi bi-plus-circle"></i> Создать книжный клуб</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_name" class="form-label">Название клуба</label>
+                        {{ form.name }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_description" class="form-label">Описание</label>
+                        {{ form.description }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_cover" class="form-label">Обложка</label>
+                        {{ form.cover }}
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            {{ form.is_private }}
+                            <label class="form-check-label" for="id_is_private">
+                                Приватный клуб (доступ только по приглашению)
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Создать клуб</button>
+                    <a href="{% url 'clubs:list' %}" class="btn btn-secondary">Отмена</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

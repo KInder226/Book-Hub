@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Создать пост - {{ club.name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="bi bi-plus-circle"></i> Создать пост</h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Клуб: {{ club.name }}</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_title" class="form-label">Заголовок</label>
+                        {{ form.title }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_content" class="form-label">Содержание</label>
+                        {{ form.content }}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="id_post_type" class="form-label">Тип поста</label>
+                            {{ form.post_type }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_chapter" class="form-label">Глава (необязательно)</label>
+                            {{ form.chapter }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Теги</label>
+                        <div class="row">
+                            {% for tag in form.tags %}
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        {{ tag }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Опубликовать</button>
+                    <a href="{% url 'discussions:club_posts' club_id=club.pk %}" class="btn btn-secondary">Отмена</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
