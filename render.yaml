@@ -7,7 +7,9 @@ services:
     startCommand: "gunicorn bookclubhub.wsgi:application"
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.9
+        value: "3.11.9"
+      - key: RUNTIME_VERSION
+        value: "3.11.9"
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
